@@ -34,7 +34,10 @@ import { Rule } from "../models/rule";
         <section>
 
         <header class="header">
-            <h1>Hola desde rules</h1>
+            <h1>Reglas de la aplicación</h1>
+
+            <p-button label="Check" />
+
 
             <button pButton>
                 <i class="pi pi-check" pButtonIcon></i>
@@ -71,7 +74,7 @@ import { Rule } from "../models/rule";
 export class RulesComponent implements OnInit {
 
     reglas: Rule[] = []
-    visible: boolean = true;
+    visible = true;
 
     disparadorService = inject(DisparadorService)
 
@@ -83,7 +86,7 @@ export class RulesComponent implements OnInit {
 
     ngOnInit (): void {
         this.http.get('/res.json').subscribe((response: any) => {
-                        console.log("response: ", response)
+            console.log("response: ", response)
 
             this.reglas = response
             console.log(this.reglas)

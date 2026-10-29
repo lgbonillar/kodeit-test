@@ -1,1 +1,5 @@
 @import "primeicons/primeicons.css";
+
+* {
+    font-family: 'Poppins', 'Roboto', system-ui;
+}
