@@ -1,11 +1,11 @@
-import { Component, inject } from '@angular/core';
-import { Condicion, DISPARADOR } from '../models/disparador';
+import { Component, Input, OnInit } from '@angular/core';
+import { Rule } from '../models/rule';
+import { CampoDisponible, Condicion, DISPARADOR } from '../models/disparador';
 import { TabsModule } from 'primeng/tabs';
 import { FormsModule } from '@angular/forms';
 import { SelectModule } from 'primeng/select';
 import { ButtonModule } from 'primeng/button';
 import { AgregarCondicion, CondicionComponent } from './condicion.component';
-import { DisparadorService } from '../services/disparador.service';
 import { IftaLabelModule } from 'primeng/iftalabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { TooltipModule } from 'primeng/tooltip';
@@ -56,26 +56,31 @@ import { RadioButtonModule } from 'primeng/radiobutton';
             display: flex;
             gap: 0.2rem;
         }
+
+        .condiciones {
+            display: flex;
+            flex-direction: column;
+        }
     `,
     template: `
-        <div class="regla-card">
+        <form #reglaForm="ngForm" class="regla-card" (ngSubmit)="guardarRegla()">
             <div>
                 <p-iftalabel class="campo-nombre">
-                    <input pInputText id="rule-name" [(ngModel)]="nombreRegla" autocomplete="off" style="width: 100%;" />
+                    <input pInputText id="rule-name" required name="nombre" [(ngModel)]="nombreRegla" autocomplete="off" style="width: 100%;" />
                     <label for="username">Nombre</label>
                 </p-iftalabel>
             </div>
 
             <div>
                 <p-iftalabel class="campo-descripcion">
-                    <input pInputText id="rule-name" [(ngModel)]="descripcionRegla" autocomplete="off" style="width: 100%;" />
+                    <input pInputText id="rule-name" name="descripcion" [(ngModel)]="descripcionRegla" autocomplete="off" style="width: 100%;" />
                     <label for="username">Descripción</label>
                 </p-iftalabel>
             </div>
 
             <div>
                 <p-iftalabel class="campo-disparador">
-                    <p-select [(ngModel)]="triggerSelected" inputId="input-disparador" [options]="triggers" [fluid]="true" appendTo="body" />
+                    <p-select [ngModel]="triggerSelected" (ngModelChange)="cambiarDisparador($event)" name="disparador" required inputId="input-disparador" [options]="triggers" [fluid]="true" appendTo="body" />
                     <label for="dd-city">Disparador</label>
                 </p-iftalabel>
     
@@ -107,7 +112,10 @@ import { RadioButtonModule } from 'primeng/radiobutton';
                                     </aside>
                                 </div>
                                 <div class="condition">
-                                    <app-condicion (agregarCondicion)="agregarCondicion($event)" />
+                                    <app-condicion
+                                        [campos]="camposDisponibles"
+                                        (agregarCondicion)="agregarCondicion($event)"
+                                    />
                                 </div>
                                 <div class="condiciones">
                                     @for (condicion of condiciones; track condicion.keyword) {
@@ -125,32 +133,94 @@ import { RadioButtonModule } from 'primeng/radiobutton';
             </div>
 
             <div style="align-self: flex-end;">
-                <p-button icon="pi pi-file-plus" label="Guardar" [raised]="true" pTooltip="Guardar regla" />
+                <p-button type="submit" icon="pi pi-file-plus" label="Guardar" [raised]="true" pTooltip="Guardar regla" [disabled]="!reglaForm.valid || condiciones.length === 0" />
             </div>
-        </div>
+        </form>
     `,
     imports: [ ButtonModule, TabsModule, CondicionComponent, FormsModule, SelectModule, InputTextModule, RadioButtonModule, IftaLabelModule, FormsModule, TooltipModule ]
 })
-export class DisparadorComponent {
+export class DisparadorComponent implements OnInit {
+
+    @Input() regla: Rule | null = null;
 
     triggers = ['CLIENTE_CREADO', 'PAGO_RECIBIDO', 'TICKET_SIN_RESPUESTA']
-    triggerSelected!: DISPARADOR
+    triggerSelected: DISPARADOR | null = null
 
     nombreRegla = ''
     descripcionRegla = ''
-
     statement = 'all'
 
-    condicionEdicion: Condicion[] = [
+    condiciones: Condicion[] = []
 
-    ]
+    camposPorDisparador: Record<DISPARADOR, CampoDisponible[]> = {
+        CLIENTE_CREADO: [
+            { nombre: 'País', type: 'texto' },
+            { nombre: 'Plan', type: 'texto' }
+        ],
+        PAGO_RECIBIDO: [
+            { nombre: 'Monto', type: 'numero' },
+            { nombre: 'Moneda', type: 'texto' }
+        ],
+        TICKET_SIN_RESPUESTA: [
+            { nombre: 'horas_sin_respuesta', type: 'numero' },
+            { nombre: 'prioridad', type: 'texto' }
+        ]
+    };
 
-    condiciones: AgregarCondicion[] = []
+    get camposDisponibles(): CampoDisponible[] {
+        return this.triggerSelected
+            ? this.camposPorDisparador[this.triggerSelected]
+            : [];
+    }
 
-    disparadorService = inject(DisparadorService)
+    ngOnInit(): void {
+        this.prepararFormulario();
+    }
+
+    prepararFormulario () {
+        this.limpiarFormulario();
+
+        const regla = this.regla
+
+        if (!regla) return
+
+        this.nombreRegla = regla.nombre
+        this.descripcionRegla = regla.descripcion
+        this.triggerSelected = regla.disparador?.type ?? null
+        
+        if (regla.condicion) {
+            this.statement = regla.condicion.declaracion
+            this.condiciones = regla.condicion.condiciones
+        }
+    }
+
+    guardarRegla() {
+        if (
+            !this.nombreRegla.trim() ||
+            !this.triggerSelected ||
+            this.condiciones.length === 0
+        ) {
+            return;
+        }
+
+        console.log('Agregada!!', this.regla)
+    }
 
     agregarCondicion(condicion: AgregarCondicion) {
         this.condiciones.push(condicion)
+    }
+
+    limpiarFormulario() {
+        this.nombreRegla = ''
+        this.descripcionRegla = ''
+        this.triggerSelected = null
+        this.statement = 'all'
+        this.condiciones = []
+    }
+
+    cambiarDisparador(disparador: DISPARADOR | null): void {
+        this.triggerSelected = disparador;
+        this.condiciones = [];
     }
 
 }

@@ -1,4 +1,4 @@
-import { Condicion, Disparador } from "./disparador"
+import { Condiciones, Disparador } from "./disparador"
 
 export interface Rule {
     id: string
@@ -6,5 +6,5 @@ export interface Rule {
     descripcion: string
     enabled: boolean,
     disparador?: Disparador
-    condicion?: Condicion
+    condicion?: Condiciones
 }

@@ -6,7 +6,8 @@
         "enabled": true,
         "disparador": {
             "id": "b8918d9b-1453-4e06-bb8d-b260858abcb1",
-            "nombre": "Paso 1: Cliente creado"
+            "nombre": "Paso 1: Cliente creado",
+            "type": "CLIENTE_CREADO"
         },
         "condicion": {
             "declaracion": "all",
@@ -14,7 +15,8 @@
                 {
                     "id": "b8918d9b-1453-4e06-bb8d-b260858abcc1",
                     "campo": "pais",
-                    "operador": "es_igual_a"
+                    "operador": "es_igual_a",
+                    "keyword": "México"
                 }
             ]
         }
@@ -26,7 +28,8 @@
         "enabled": true,
         "disparador": {
             "id": "b8918d9b-1453-4e06-bb8d-b260858abcb1",
-            "nombre": "Paso 2: Pago Recibido"
+            "nombre": "Paso 2: Pago Recibido",
+            "type": "PAGO_RECIBIDO"
         },
         "condicion": {
             "declaracion": "any",
@@ -34,12 +37,14 @@
                 {
                     "id": "b8918d9b-1453-4e06-bb8d-b260858abcc3",
                     "campo": "pais",
-                    "operador": "es_igual_a"
+                    "operador": "es_igual_a",
+                    "keyword": "España"
                 },
                 {
                     "id": "b8918d9b-1453-4e06-bb8d-b260858abcc4",
                     "campo": "plan",
-                    "operador": "contiene"
+                    "operador": "contiene",
+                    "keyword": "Océano"
                 }
             ]
         }

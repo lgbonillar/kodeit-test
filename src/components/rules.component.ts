@@ -94,7 +94,8 @@ import { DisparadorComponent } from "./disparador.component";
                 </div>
               </div>
 
-              <div>
+              <div style="display: flex; gap: 1rem;">
+                <p-button icon="pi pi-file-edit" [rounded]="true" severity="secondary" [outlined]="true" pTooltip="Editar regla" (click)="editarRegla(item)" />
                 <p-button icon="pi pi-times" [rounded]="true" severity="danger" [outlined]="true" pTooltip="Eliminar regla" />
               </div>
             </div>
@@ -103,8 +104,15 @@ import { DisparadorComponent } from "./disparador.component";
         </p-dataview>
       </div>
 
-      <p-dialog [header]="modoEdicion ? 'Edición de Regla' : 'Creando nueva regla'" [modal]="true" [(visible)]="visible" [style]="{ width: '50rem' }">
-        <app-disparador />
+      <p-dialog
+          [header]="modoEdicion ? 'Edición de Regla' : 'Creando nueva regla'"
+          [modal]="true"
+          [(visible)]="visible"
+          [style]="{ width: '50rem' }"
+      >
+        @if (visible) {
+          <app-disparador [regla]="disparadorService.reglaSeleccionada" />
+        }
       </p-dialog>
     `,
     imports: [ButtonModule, DataViewModule, CheckboxModule, CommonModule, CardModule, DialogModule, FormsModule, TagModule, TooltipModule, DisparadorComponent]
@@ -120,7 +128,9 @@ export class RulesComponent implements OnInit {
   disparadorService = inject(DisparadorService)
 
   showDialog() {
+    this.disparadorService.reglaSeleccionada = null;
     this.visible = true;
+    this.modoEdicion = false;
   }
 
   private readonly http = inject(HttpClient)
@@ -139,8 +149,8 @@ export class RulesComponent implements OnInit {
   }
 
   editarRegla(regla: Rule) {
-    this.disparadorService.reglaSeleccionada = regla
-    console.log('Regla seleccionada', this.disparadorService.reglaSeleccionada)
+    this.disparadorService.reglaSeleccionada = structuredClone(regla)
+    this.modoEdicion = true;
     this.visible = true;
   }
 

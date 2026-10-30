@@ -5,7 +5,7 @@ import { Rule } from "../models/rule";
     providedIn: 'root'
 })
 export class DisparadorService {
-    reglaSeleccionada!: Rule
+    reglaSeleccionada: Rule | null = null
 
     tipoDeDisparador (): void {
 
