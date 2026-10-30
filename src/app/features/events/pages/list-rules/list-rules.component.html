@@ -1,6 +1,6 @@
 <section class="flex flex-col w-full">
   <header class="flex justify-center border-b-2 border-b-stone-200 h-14">
-    <div class="flex justify-between w-full max-w-200 items-center gap-4">
+    <div class="flex justify-between app-wrapper items-center gap-4">
       <h1 class="flex-1 text-2xl font-bold">
         Listado de Reglas
       </h1>
@@ -12,8 +12,53 @@
   </header>
 
   <p-dataview #dv [value]="rules()" styleClass="full-w">
-    <ng-template #list let-items>
-      
+    <ng-template #list let-rules class="flex">
+      <div class="app-wrapper justify-self-center pt-4">
+        @for (rule of rules; track rule.id; let i = $index) {
+          <div class="flex items-center gap-4 min-h-12 border border-stone-200 p-2">
+            <label
+              [for]="'enabled-' + rule.id"
+              class="flex flex-1 min-w-0 items-center gap-4 cursor-pointer"
+            >
+              <p-checkbox
+                  [inputId]="'enabled-' + rule.id"
+                  [binary]="true"
+                  [ngModel]="rule.enabled"
+                  [pTooltip]="rule.enabled ? 'Clic para deshabilitar regla' : 'Clic para habilitar regla'"
+                  (ngModelChange)="cambiarEstadoRegla($event, rule.id)"
+                  class="shrink-0"
+              />
+
+              <div class="flex flex-col flex-1">
+                <span class="font-bold text-smo">{{ rule.nombre }}</span>
+                <div>
+                  <p-tag [value]="rule.disparador.nombre" />
+                </div>
+              </div>
+            </label>
+
+            <div class="flex shrink-0 gap-2">
+              <button pButton [rounded]="true" severity="secondary" [outlined]="true" pTooltip="Editar regla">
+                <i class="pi pi-file-edit"></i>
+              </button>
+              <button pButton [rounded]="true" severity="danger" [outlined]="true" pTooltip="Eliminar regla" (click)="eliminarRegla(i)">
+                <i class="pi pi-times"></i>
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+    </ng-template>
+    <ng-template #emptymessage>
+      <div class="app-wrapper justify-self-center pt-4 flex flex-col items-center">
+        <span class="font-bold">No hay reglas establecidas.</span>
+        <div>
+          <span>Crear nueva regla </span>
+          <button pButton [raised]="true" pTooltip="Nueva regla" (click)="showDialog()" class="shrink-0">
+            <i class="pi pi-file-plus"></i>
+          </button>
+        </div>
+      </div>
     </ng-template>
   </p-dataview>
 

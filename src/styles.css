@@ -16,3 +16,7 @@ body {
 body {
   min-height: 100vh;
 }
+
+.app-wrapper {
+  @apply w-full max-w-200;
+}
