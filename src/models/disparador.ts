@@ -6,6 +6,10 @@ export interface Condicion {
     campo: string
     operador: string
 }
+export interface Condiciones {
+    declaracion: string
+    condiciones: Condicion[]
+}
 
 export interface Disparador {
     id: string

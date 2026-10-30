@@ -4,10 +4,12 @@ import { TabsModule } from 'primeng/tabs';
 import { FormsModule } from '@angular/forms';
 import { SelectModule } from 'primeng/select';
 import { ButtonModule } from 'primeng/button';
-import { CondicionComponent } from './condicion.component';
+import { AgregarCondicion, CondicionComponent } from './condicion.component';
 import { DisparadorService } from '../services/disparador.service';
 import { IftaLabelModule } from 'primeng/iftalabel';
 import { InputTextModule } from 'primeng/inputtext';
+import { TooltipModule } from 'primeng/tooltip';
+import { RadioButtonModule } from 'primeng/radiobutton';
 
 @Component({
     selector: 'app-disparador',
@@ -28,6 +30,31 @@ import { InputTextModule } from 'primeng/inputtext';
             display: block;
             width: 20rem;
             max-width: 100%;
+        }
+
+        .statement-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .statement {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .statement-description {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding-left: 1rem;
+            gap: 1rem;
+            border-left: 1px solid #ececec;
+        }
+
+        .statement-description--text {
+            display: flex;
+            gap: 0.2rem;
         }
     `,
     template: `
@@ -65,8 +92,29 @@ import { InputTextModule } from 'primeng/inputtext';
                     </p-tablist>
                     <p-tabpanels>
                         <p-tabpanel value="0">
-                            <app-condicion />
-                            <span>tab 1</span>
+                            <div class="statement-container">
+                                <div class="statement">
+                                    <span>Declaración</span>
+                                    <aside class="statement-description">
+                                        <div class="statement-description--text">
+                                            <p-radiobutton name="statement" value="all" [(ngModel)]="statement" inputId="statement-all" />
+                                            <label for="statement-all">TODOS (Filtrar si se cumplen TODAS las siguientes condiciones)</label>
+                                        </div>
+                                        <div class="statement-description--text">
+                                            <p-radiobutton name="statement" value="any" [(ngModel)]="statement" inputId="statement-any" />
+                                            <label for="statement-any">CUALQUIERA (Filtrar si se cumple ALGUNA de las siguientes condiciones)</label>
+                                        </div>
+                                    </aside>
+                                </div>
+                                <div class="condition">
+                                    <app-condicion (agregarCondicion)="agregarCondicion($event)" />
+                                </div>
+                                <div class="condiciones">
+                                    @for (condicion of condiciones; track condicion.keyword) {
+                                        <span>El campo {{ condicion.campo }} {{ condicion.operador }} <strong>{{ condicion.keyword }}</strong> </span>
+                                    }
+                                </div>
+                            </div>
                         </p-tabpanel>
                         <p-tabpanel value="1">
                             <span>tab 2</span>
@@ -75,9 +123,13 @@ import { InputTextModule } from 'primeng/inputtext';
                 </p-tabs>
                 }
             </div>
+
+            <div style="align-self: flex-end;">
+                <p-button icon="pi pi-file-plus" label="Guardar" [raised]="true" pTooltip="Guardar regla" />
+            </div>
         </div>
     `,
-    imports: [ ButtonModule, TabsModule, CondicionComponent, FormsModule, SelectModule, SelectModule, InputTextModule, IftaLabelModule, FormsModule ]
+    imports: [ ButtonModule, TabsModule, CondicionComponent, FormsModule, SelectModule, InputTextModule, RadioButtonModule, IftaLabelModule, FormsModule, TooltipModule ]
 })
 export class DisparadorComponent {
 
@@ -87,12 +139,18 @@ export class DisparadorComponent {
     nombreRegla = ''
     descripcionRegla = ''
 
+    statement = 'all'
+
     condicionEdicion: Condicion[] = [
 
     ]
 
-    condiciones: Condicion[] = []
+    condiciones: AgregarCondicion[] = []
 
     disparadorService = inject(DisparadorService)
+
+    agregarCondicion(condicion: AgregarCondicion) {
+        this.condiciones.push(condicion)
+    }
 
 }

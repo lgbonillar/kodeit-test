@@ -6,5 +6,5 @@ export interface Rule {
     descripcion: string
     enabled: boolean,
     disparador?: Disparador
-    condiciones?: Condicion
+    condicion?: Condicion
 }
