@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http'
 import { inject, Injectable } from '@angular/core'
-import { Rule } from '../../../../models/rule'
+import { Rule } from '../models/rule'
 import { Observable } from 'rxjs'
 
 @Injectable({

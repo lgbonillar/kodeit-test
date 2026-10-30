@@ -5,7 +5,7 @@ import { IftaLabelModule } from 'primeng/iftalabel'
 import { InputTextModule } from 'primeng/inputtext'
 import { SelectModule } from 'primeng/select'
 import { TextareaModule } from 'primeng/textarea'
-import { Accion, EmailAction, SmsAction, WebhookAction } from '../../../../models/accion'
+import { Accion, EmailAction, SmsAction, WebhookAction } from '../models/accion'
 import { AccordionModule } from 'primeng/accordion';
 import { ChipModule } from 'primeng/chip'
 

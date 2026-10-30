@@ -5,7 +5,7 @@ import { IftaLabelModule } from 'primeng/iftalabel'
 import { InputTextModule } from 'primeng/inputtext'
 import { RadioButtonModule } from 'primeng/radiobutton'
 import { SelectModule } from 'primeng/select'
-import { CampoDisponible, Condicion, Condiciones, DISPARADOR, TipoCampo } from '../../../../models/disparador'
+import { CampoDisponible, Condicion, Condiciones, DISPARADOR, TipoCampo } from '../models/disparador'
 import { TooltipModule } from 'primeng/tooltip'
 import { ChipModule } from 'primeng/chip'
 

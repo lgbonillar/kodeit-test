@@ -5,7 +5,7 @@ import { TooltipModule } from 'primeng/tooltip'
 import { RulesService } from '../../service/rules.service'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { catchError, EMPTY, finalize } from 'rxjs'
-import { Rule } from '../../../../../models/rule'
+import { Rule } from '../../models/rule'
 import { CheckboxModule } from 'primeng/checkbox'
 import { FormsModule } from '@angular/forms'
 import { TagModule } from 'primeng/tag'

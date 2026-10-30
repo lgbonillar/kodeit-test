@@ -1,16 +1,17 @@
-import { Component, Input, OnInit } from '@angular/core'
-import { GuardarReglaRequest, Rule } from '../../../../models/rule'
+import { Component, inject, Input, OnInit } from '@angular/core'
+import { GuardarReglaRequest, Rule } from '../models/rule'
 import { IftaLabelModule } from 'primeng/iftalabel'
 import { SelectModule } from 'primeng/select'
 import { FormsModule } from '@angular/forms'
-import { Condiciones, DISPARADOR } from '../../../../models/disparador'
+import { Condiciones, DISPARADOR } from '../models/disparador'
 import { InputTextModule } from 'primeng/inputtext'
 import { ButtonModule } from 'primeng/button'
 import { TooltipModule } from 'primeng/tooltip'
 import { TabsModule } from 'primeng/tabs'
 import { ConditionComponent } from './condition.component'
 import { ActionsComponent } from './actions.component'
-import { Accion } from '../../../../models/accion'
+import { Accion } from '../models/accion'
+import { MessageService } from 'primeng/api'
 
 @Component({
   selector: 'app-rule-form',
@@ -83,6 +84,8 @@ export class RuleFormComponent implements OnInit {
   condiciones: Condiciones | null = null
   acciones: Accion[] | null = null
 
+  readonly messageService = inject(MessageService)
+
   ngOnInit(): void {
     if (!this.ruleSelected) return
     if (!this.ruleSelected.disparador) return
@@ -97,40 +100,50 @@ export class RuleFormComponent implements OnInit {
   }
 
   guardarRegla() {
-      if (
-          !this.nombreRegla.trim() ||
-          !this.triggerSelected ||
-          !this.condiciones ||
-          this.condiciones.condiciones.length === 0 ||
-          !this.acciones ||
-          this.acciones.length === 0
-      ) {
-          return;
-      }
+    if (
+        !this.nombreRegla.trim() ||
+        !this.triggerSelected ||
+        !this.condiciones ||
+        this.condiciones.condiciones.length === 0 ||
+        !this.acciones ||
+        this.acciones.length === 0
+    ) {
+      if(
+        !this.condiciones ||
+        this.condiciones.condiciones.length === 0
+      ) return this.messageService.add({severity: 'info', summary: 'Debe registrar al menos una condición'})
+      if(
+        !this.acciones ||
+        this.acciones.length === 0
+      ) return this.messageService.add({severity: 'info', summary: 'Debe registrar al menos una acción'})
+      return
+    }
 
-      const payload: GuardarReglaRequest = {
-          nombre: this.nombreRegla.trim(),
-          descripcion: this.descripcionRegla.trim(),
-          enabled: this.ruleSelected?.enabled ?? true,
+    const payload: GuardarReglaRequest = {
+        nombre: this.nombreRegla.trim(),
+        descripcion: this.descripcionRegla.trim(),
+        enabled: this.ruleSelected?.enabled ?? true,
 
-          disparador: {
-              type: this.triggerSelected
-          },
+        disparador: {
+            type: this.triggerSelected
+        },
 
-          condicion: {
-              declaracion: this.condiciones.declaracion,
-              condiciones: this.condiciones.condiciones.map(condicion => ({
-                  campo: condicion.campo,
-                  operador: condicion.operador,
-                  keyword: condicion.keyword.trim()
-              }))
-          },
+        condicion: {
+            declaracion: this.condiciones.declaracion,
+            condiciones: this.condiciones.condiciones.map(condicion => ({
+                campo: condicion.campo,
+                operador: condicion.operador,
+                keyword: condicion.keyword.trim()
+            }))
+        },
 
-          acciones: structuredClone(this.acciones)
-      }
+        acciones: structuredClone(this.acciones)
+    }
 
-      console.log('ID de regla:', this.ruleSelected?.id);
-      console.log('Payload:', payload);
+    console.log('ID de regla:', this.ruleSelected?.id);
+    console.log('Payload:', payload);
+
+    this.messageService.add({ severity: 'success', summary: 'Regla registrada' })
   }
 
   triggerChanged(trigger: DISPARADOR) {
