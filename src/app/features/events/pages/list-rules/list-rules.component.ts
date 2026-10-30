@@ -11,17 +11,22 @@ import { FormsModule } from '@angular/forms'
 import { TagModule } from 'primeng/tag'
 import { ConfirmPopupModule } from 'primeng/confirmpopup'
 import { ConfirmationService } from 'primeng/api'
+import { DialogModule } from 'primeng/dialog'
+import { RuleFormComponent } from '../../components/rule-form.component'
 
 @Component({
   selector: 'app-list-rules',
   templateUrl: './list-rules.component.html',
-  imports: [ ButtonModule, CheckboxModule, ConfirmPopupModule, DataViewModule, FormsModule, TagModule, TooltipModule ],
+  imports: [ ButtonModule, CheckboxModule, ConfirmPopupModule, DataViewModule, DialogModule, FormsModule, RuleFormComponent, TagModule, TooltipModule ],
   providers: [ ConfirmationService ]
 })
 export default class ListRulesComponent implements OnInit {
 
   loadingRules = signal<boolean>(false)
   rules = signal<Rule[]>([])
+
+  visible = false
+  ruleSelected: Rule | null = null
 
   private readonly confirmationService = inject(ConfirmationService);
   private readonly rulesService = inject(RulesService)
@@ -33,6 +38,11 @@ export default class ListRulesComponent implements OnInit {
 
   showDialog(): void {
     return
+  }
+
+  abrirFormulario(regla: Rule) {
+    this.ruleSelected = structuredClone(regla)
+    this.visible = true;
   }
 
   cambiarEstadoRegla (enabled: boolean, id: string): void {

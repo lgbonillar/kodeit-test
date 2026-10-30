@@ -14,46 +14,53 @@
   <p-dataview #dv [value]="rules()" styleClass="full-w">
     <ng-template #list let-rules class="flex">
       <div class="app-wrapper justify-self-center pt-4">
-        @for (rule of rules; track rule.id; let i = $index) {
-          <div class="flex items-center gap-4 min-h-12 border border-stone-200 p-2">
-            <label
-              [for]="'enabled-' + rule.id"
-              class="flex flex-1 min-w-0 items-center gap-4 cursor-pointer"
-            >
-              <p-checkbox
-                  [inputId]="'enabled-' + rule.id"
-                  [binary]="true"
-                  [ngModel]="rule.enabled"
-                  [pTooltip]="rule.enabled ? 'Clic para deshabilitar regla' : 'Clic para habilitar regla'"
-                  (ngModelChange)="cambiarEstadoRegla($event, rule.id)"
-                  class="shrink-0"
-              />
+        @for (rule of rules; track rule.id) {
+        <div class="flex items-center gap-4 min-h-12 border border-stone-200 p-2">
+          <label
+            [for]="'enabled-' + rule.id"
+            class="flex flex-1 min-w-0 items-center gap-4 cursor-pointer"
+          >
+            <p-checkbox
+                [inputId]="'enabled-' + rule.id"
+                [binary]="true"
+                [ngModel]="rule.enabled"
+                [pTooltip]="rule.enabled ? 'Clic para deshabilitar regla' : 'Clic para habilitar regla'"
+                (ngModelChange)="cambiarEstadoRegla($event, rule.id)"
+                class="shrink-0"
+            />
 
-              <div class="flex flex-col flex-1">
-                <span class="font-bold text-smo">{{ rule.nombre }}</span>
-                <div>
-                  <p-tag [value]="rule.disparador.nombre" />
-                </div>
+            <div class="flex flex-col flex-1">
+              <span class="font-bold text-smo">{{ rule.nombre }}</span>
+              <div>
+                <p-tag [value]="rule.disparador.nombre" />
               </div>
-            </label>
-
-            <div class="flex shrink-0 gap-2">
-              <button pButton [rounded]="true" severity="secondary" [outlined]="true" pTooltip="Editar regla">
-                <i class="pi pi-file-edit"></i>
-              </button>
-              <button
-                  pButton [rounded]="true"
-                  type="button"
-                  severity="danger"
-                  pTooltip="Eliminar regla"
-                  aria-label="Eliminar regla"
-                  [outlined]="true"
-                  (click)="confirmarEliminacion($event, rule)"
-              >
-                <i class="pi pi-times"></i>
-              </button>
             </div>
+          </label>
+
+          <div class="flex shrink-0 gap-2">
+            <button
+                pButton
+                severity="secondary"
+                pTooltip="Editar regla"
+                [rounded]="true"
+                [outlined]="true"
+                (click)="abrirFormulario(rule)"
+            >
+              <i class="pi pi-file-edit"></i>
+            </button>
+            <button
+                pButton [rounded]="true"
+                type="button"
+                severity="danger"
+                pTooltip="Eliminar regla"
+                aria-label="Eliminar regla"
+                [outlined]="true"
+                (click)="confirmarEliminacion($event, rule)"
+            >
+              <i class="pi pi-times"></i>
+            </button>
           </div>
+        </div>
         }
       </div>
     </ng-template>
@@ -99,3 +106,14 @@
       </div>
   </ng-template>
 </p-confirmpopup>
+
+<p-dialog
+  [modal]="true"
+  [header]="ruleSelected ? 'Edición de Regla' : 'Creando nueva regla'"
+  [style]="{ width: '50rem' }"
+  [(visible)]="visible"
+>
+  @if (visible) {
+  <app-rule-form />
+  }
+</p-dialog>
