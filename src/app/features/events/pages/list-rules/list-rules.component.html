@@ -111,6 +111,8 @@
   [modal]="true"
   [header]="ruleSelected ? 'Edición de Regla' : 'Creando nueva regla'"
   [style]="{ width: '50rem' }"
+  [draggable]="false"
+  [resizable]="false"
   [(visible)]="visible"
 >
   @if (visible) {

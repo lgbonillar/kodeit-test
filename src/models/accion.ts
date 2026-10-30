@@ -17,3 +17,7 @@ export type Accion =
     }
 
 export type TipoAccion = Accion['tipo']
+
+export type EmailAction = Extract<Accion, { tipo: 'email' }>
+export type SmsAction = Extract<Accion, { tipo: 'sms' }>
+export type WebhookAction = Extract<Accion, { tipo: 'webhook' }>

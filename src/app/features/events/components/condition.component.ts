@@ -5,7 +5,7 @@ import { IftaLabelModule } from 'primeng/iftalabel'
 import { InputTextModule } from 'primeng/inputtext'
 import { RadioButtonModule } from 'primeng/radiobutton'
 import { SelectModule } from 'primeng/select'
-import { CampoDisponible, Condicion, DISPARADOR, TipoCampo } from '../../../../models/disparador'
+import { CampoDisponible, Condicion, Condiciones, DISPARADOR, TipoCampo } from '../../../../models/disparador'
 import { TooltipModule } from 'primeng/tooltip'
 import { ChipModule } from 'primeng/chip'
 
@@ -72,7 +72,7 @@ import { ChipModule } from 'primeng/chip'
 export class ConditionComponent implements OnChanges {
 
   @Input() trigger: DISPARADOR | null = null
-  @Output() conditionsChanged = new EventEmitter<Condicion[]>()
+  @Output() conditionsChanged = new EventEmitter<Condiciones>()
 
   statement: 'all' | 'any' = 'all'
   keyword = ''
@@ -136,7 +136,7 @@ export class ConditionComponent implements OnChanges {
     
     this.condiciones = [...this.condiciones, newCondition]
 
-    this.conditionsChanged.emit(this.condiciones);
+    this.conditionsChanged.emit({ declaracion: this.statement, condiciones: this.condiciones })
     this.resetForm()
   }
 
@@ -144,14 +144,14 @@ export class ConditionComponent implements OnChanges {
     this.condiciones = this.condiciones.filter(
         (_, posicion) => posicion !== indice
     )
-    this.conditionsChanged.emit(this.condiciones)
+    this.conditionsChanged.emit({ declaracion: this.statement, condiciones: this.condiciones })
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['trigger']) {
       this.resetForm()
       this.condiciones = []
-      this.conditionsChanged.emit(this.condiciones)
+      this.conditionsChanged.emit({ declaracion: this.statement, condiciones: this.condiciones })
     }
   }
   
