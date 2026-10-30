@@ -1,16 +1,18 @@
-@import "primeicons/primeicons.css";
+@import 'primeicons/primeicons.css';
+@import 'tailwindcss';
+@import 'tailwindcss-primeui';
 
 * {
-    font-family: 'Poppins', 'Roboto', system-ui;
+  font-family: 'Poppins', 'Roboto', system-ui;
 }
 
 html,
 body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
+  margin: 0;
+  padding: 0;
+  width: 100%;
 }
 
 body {
-    min-height: 100vh;
+  min-height: 100vh;
 }

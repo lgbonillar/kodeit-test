@@ -1,0 +1,20 @@
+<section class="flex flex-col w-full">
+  <header class="flex justify-center border-b-2 border-b-stone-200 h-14">
+    <div class="flex justify-between w-full max-w-200 items-center gap-4">
+      <h1 class="flex-1 text-2xl font-bold">
+        Listado de Reglas
+      </h1>
+      
+      <button pButton [raised]="true" pTooltip="Nueva regla" (click)="showDialog()" class="shrink-0">
+        <i class="pi pi-file-plus"></i>
+      </button>
+    </div>
+  </header>
+
+  <p-dataview #dv [value]="rules()" styleClass="full-w">
+    <ng-template #list let-items>
+      
+    </ng-template>
+  </p-dataview>
+
+</section>
