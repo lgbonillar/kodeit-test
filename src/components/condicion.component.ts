@@ -19,12 +19,12 @@ export interface AgregarCondicion { campo: string, operador: string, keyword: st
                 <div class="condition-form--input-container">
                     <p-iftalabel class="campo">
                         <p-select [ngModel]="campoSeleccionado" (ngModelChange)="cambiarCampo($event)" required name="campo" inputId="condicion-campo" [options]="campos" optionLabel="nombre" [fluid]="true" appendTo="body" />
-                        <label for="dd-city">Campo</label>
+                        <label for="condicion-campo">Campo</label>
                     </p-iftalabel>
 
                     <p-iftalabel class="campo">
                         <p-select [(ngModel)]="operadorSeleccionado" required name="operador" inputId="condicion-operador" [options]="operadoresDisponibles" [fluid]="true" appendTo="body" [disabled]="!campoSeleccionado" />
-                        <label for="dd-city">Operador</label>
+                        <label for="condicion-operador">Operador</label>
                     </p-iftalabel>
                 </div>
 

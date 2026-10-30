@@ -15,7 +15,7 @@ export interface Condicion {
     keyword: string
 }
 export interface Condiciones {
-    declaracion: string
+    declaracion: 'all' | 'any'
     condiciones: Condicion[]
 }
 

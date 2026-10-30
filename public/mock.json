@@ -1,59 +1,506 @@
 [
-    {
-        "id": "a8918d9b-1453-4e06-bb8d-b260858abcc5",
-        "nombre": "Enviar Correo electrónico",
-        "descripcion": "Se manda un correo electrónico con algunas reglas",
-        "enabled": true,
-        "disparador": {
-            "id": "b8918d9b-1453-4e06-bb8d-b260858abcb1",
-            "nombre": "Paso 1: Cliente creado",
-            "type": "CLIENTE_CREADO"
-        },
-        "condicion": {
-            "declaracion": "all",
-            "condiciones": [
-                {
-                    "id": "b8918d9b-1453-4e06-bb8d-b260858abcc1",
-                    "campo": "pais",
-                    "operador": "es_igual_a",
-                    "keyword": "México"
-                }
-            ]
-        }
+  {
+    "id": "00000000-0000-4000-8000-000000000001",
+    "nombre": "Bienvenida a clientes de México",
+    "descripcion": "Ejemplo 1: bienvenida a clientes de méxico.",
+    "enabled": true,
+    "disparador": {
+      "id": "00000000-0000-4000-8000-000000000101",
+      "nombre": "Cliente creado",
+      "type": "CLIENTE_CREADO"
     },
-    {
-        "id": "b8918d9b-1453-4e06-bb8d-b260858abcc6",
-        "nombre": "Enviar mensaje SMS",
-        "descripcion": "Se manda un SMS",
-        "enabled": true,
-        "disparador": {
-            "id": "b8918d9b-1453-4e06-bb8d-b260858abcb1",
-            "nombre": "Paso 2: Pago Recibido",
-            "type": "PAGO_RECIBIDO"
-        },
-        "condicion": {
-            "declaracion": "any",
-            "condiciones": [
-                {
-                    "id": "b8918d9b-1453-4e06-bb8d-b260858abcc3",
-                    "campo": "pais",
-                    "operador": "es_igual_a",
-                    "keyword": "España"
-                },
-                {
-                    "id": "b8918d9b-1453-4e06-bb8d-b260858abcc4",
-                    "campo": "plan",
-                    "operador": "contiene",
-                    "keyword": "Océano"
-                }
-            ]
+    "condicion": {
+      "declaracion": "all",
+      "condiciones": [
+        {
+          "campo": "País",
+          "operador": "es igual a",
+          "keyword": "México"
         }
+      ]
     },
-    {
-        "id": "c8918d9b-1453-4e06-bb8d-b260858abcc7",
-        "nombre": "Enviar correo y un SMS",
-        "descripcion": "Se mandan varias cosas",
-        "enabled": false,
-        "disparador": null
-    }
+    "acciones": [
+      {
+        "tipo": "email",
+        "destinatario": "notificaciones@example.com",
+        "asunto": "Bienvenida a clientes de México",
+        "cuerpo": "Notificación de prueba: Bienvenida a clientes de México. Revisa los detalles en la plataforma."
+      }
+    ]
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000002",
+    "nombre": "Activación de plan Premium",
+    "descripcion": "Ejemplo 2: activación de plan premium.",
+    "enabled": true,
+    "disparador": {
+      "id": "00000000-0000-4000-8000-000000000101",
+      "nombre": "Cliente creado",
+      "type": "CLIENTE_CREADO"
+    },
+    "condicion": {
+      "declaracion": "all",
+      "condiciones": [
+        {
+          "campo": "Plan",
+          "operador": "contiene",
+          "keyword": "Premium"
+        }
+      ]
+    },
+    "acciones": [
+      {
+        "tipo": "sms",
+        "telefono": "+525500000000",
+        "mensaje": "Aviso de prueba: Activación de plan Premium."
+      }
+    ]
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000003",
+    "nombre": "Bienvenida a clientes de España",
+    "descripcion": "Ejemplo 3: bienvenida a clientes de españa.",
+    "enabled": false,
+    "disparador": {
+      "id": "00000000-0000-4000-8000-000000000101",
+      "nombre": "Cliente creado",
+      "type": "CLIENTE_CREADO"
+    },
+    "condicion": {
+      "declaracion": "all",
+      "condiciones": [
+        {
+          "campo": "País",
+          "operador": "es igual a",
+          "keyword": "España"
+        }
+      ]
+    },
+    "acciones": [
+      {
+        "tipo": "webhook",
+        "url": "https://example.com/webhooks/regla-3",
+        "metodo": "POST"
+      }
+    ]
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000004",
+    "nombre": "Seguimiento de clientes Pro",
+    "descripcion": "Ejemplo 4: seguimiento de clientes pro.",
+    "enabled": true,
+    "disparador": {
+      "id": "00000000-0000-4000-8000-000000000101",
+      "nombre": "Cliente creado",
+      "type": "CLIENTE_CREADO"
+    },
+    "condicion": {
+      "declaracion": "all",
+      "condiciones": [
+        {
+          "campo": "Plan",
+          "operador": "es igual a",
+          "keyword": "Pro"
+        },
+        {
+          "campo": "País",
+          "operador": "es igual a",
+          "keyword": "México"
+        }
+      ]
+    },
+    "acciones": [
+      {
+        "tipo": "email",
+        "destinatario": "notificaciones@example.com",
+        "asunto": "Seguimiento de clientes Pro",
+        "cuerpo": "Notificación de prueba: Seguimiento de clientes Pro. Revisa los detalles en la plataforma."
+      },
+      {
+        "tipo": "webhook",
+        "url": "https://example.com/webhooks/regla-4",
+        "metodo": "PUT"
+      }
+    ]
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000005",
+    "nombre": "Registro de cuentas empresariales",
+    "descripcion": "Ejemplo 5: registro de cuentas empresariales.",
+    "enabled": true,
+    "disparador": {
+      "id": "00000000-0000-4000-8000-000000000101",
+      "nombre": "Cliente creado",
+      "type": "CLIENTE_CREADO"
+    },
+    "condicion": {
+      "declaracion": "any",
+      "condiciones": [
+        {
+          "campo": "Plan",
+          "operador": "contiene",
+          "keyword": "Empresa"
+        },
+        {
+          "campo": "Plan",
+          "operador": "contiene",
+          "keyword": "Premium"
+        }
+      ]
+    },
+    "acciones": [
+      {
+        "tipo": "email",
+        "destinatario": "notificaciones@example.com",
+        "asunto": "Registro de cuentas empresariales",
+        "cuerpo": "Notificación de prueba: Registro de cuentas empresariales. Revisa los detalles en la plataforma."
+      },
+      {
+        "tipo": "sms",
+        "telefono": "+525500000000",
+        "mensaje": "Aviso de prueba: Registro de cuentas empresariales."
+      },
+      {
+        "tipo": "webhook",
+        "url": "https://example.com/webhooks/regla-5",
+        "metodo": "POST"
+      }
+    ]
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000006",
+    "nombre": "Confirmación de pago en pesos",
+    "descripcion": "Ejemplo 6: confirmación de pago en pesos.",
+    "enabled": false,
+    "disparador": {
+      "id": "00000000-0000-4000-8000-000000000102",
+      "nombre": "Pago recibido",
+      "type": "PAGO_RECIBIDO"
+    },
+    "condicion": {
+      "declaracion": "all",
+      "condiciones": [
+        {
+          "campo": "Moneda",
+          "operador": "es igual a",
+          "keyword": "MXN"
+        }
+      ]
+    },
+    "acciones": [
+      {
+        "tipo": "webhook",
+        "url": "https://example.com/webhooks/regla-6",
+        "metodo": "PUT"
+      }
+    ]
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000007",
+    "nombre": "Aviso de pago mayor a mil",
+    "descripcion": "Ejemplo 7: aviso de pago mayor a mil.",
+    "enabled": true,
+    "disparador": {
+      "id": "00000000-0000-4000-8000-000000000102",
+      "nombre": "Pago recibido",
+      "type": "PAGO_RECIBIDO"
+    },
+    "condicion": {
+      "declaracion": "all",
+      "condiciones": [
+        {
+          "campo": "Monto",
+          "operador": "mayor que",
+          "keyword": "1000"
+        }
+      ]
+    },
+    "acciones": [
+      {
+        "tipo": "email",
+        "destinatario": "notificaciones@example.com",
+        "asunto": "Aviso de pago mayor a mil",
+        "cuerpo": "Notificación de prueba: Aviso de pago mayor a mil. Revisa los detalles en la plataforma."
+      }
+    ]
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000008",
+    "nombre": "Registro de pagos pequeños",
+    "descripcion": "Ejemplo 8: registro de pagos pequeños.",
+    "enabled": true,
+    "disparador": {
+      "id": "00000000-0000-4000-8000-000000000102",
+      "nombre": "Pago recibido",
+      "type": "PAGO_RECIBIDO"
+    },
+    "condicion": {
+      "declaracion": "all",
+      "condiciones": [
+        {
+          "campo": "Monto",
+          "operador": "menor que",
+          "keyword": "100"
+        }
+      ]
+    },
+    "acciones": [
+      {
+        "tipo": "sms",
+        "telefono": "+525500000000",
+        "mensaje": "Aviso de prueba: Registro de pagos pequeños."
+      }
+    ]
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000009",
+    "nombre": "Confirmación de pago exacto",
+    "descripcion": "Ejemplo 9: confirmación de pago exacto.",
+    "enabled": false,
+    "disparador": {
+      "id": "00000000-0000-4000-8000-000000000102",
+      "nombre": "Pago recibido",
+      "type": "PAGO_RECIBIDO"
+    },
+    "condicion": {
+      "declaracion": "all",
+      "condiciones": [
+        {
+          "campo": "Monto",
+          "operador": "es igual a",
+          "keyword": "250"
+        },
+        {
+          "campo": "Moneda",
+          "operador": "es igual a",
+          "keyword": "MXN"
+        }
+      ]
+    },
+    "acciones": [
+      {
+        "tipo": "email",
+        "destinatario": "notificaciones@example.com",
+        "asunto": "Confirmación de pago exacto",
+        "cuerpo": "Notificación de prueba: Confirmación de pago exacto. Revisa los detalles en la plataforma."
+      },
+      {
+        "tipo": "webhook",
+        "url": "https://example.com/webhooks/regla-9",
+        "metodo": "POST"
+      }
+    ]
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000010",
+    "nombre": "Seguimiento de pagos en dólares",
+    "descripcion": "Ejemplo 10: seguimiento de pagos en dólares.",
+    "enabled": true,
+    "disparador": {
+      "id": "00000000-0000-4000-8000-000000000102",
+      "nombre": "Pago recibido",
+      "type": "PAGO_RECIBIDO"
+    },
+    "condicion": {
+      "declaracion": "any",
+      "condiciones": [
+        {
+          "campo": "Moneda",
+          "operador": "es igual a",
+          "keyword": "USD"
+        },
+        {
+          "campo": "Monto",
+          "operador": "mayor que",
+          "keyword": "1000"
+        }
+      ]
+    },
+    "acciones": [
+      {
+        "tipo": "email",
+        "destinatario": "notificaciones@example.com",
+        "asunto": "Seguimiento de pagos en dólares",
+        "cuerpo": "Notificación de prueba: Seguimiento de pagos en dólares. Revisa los detalles en la plataforma."
+      },
+      {
+        "tipo": "sms",
+        "telefono": "+525500000000",
+        "mensaje": "Aviso de prueba: Seguimiento de pagos en dólares."
+      },
+      {
+        "tipo": "webhook",
+        "url": "https://example.com/webhooks/regla-10",
+        "metodo": "PUT"
+      }
+    ]
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000011",
+    "nombre": "Recordatorio tras cuatro horas",
+    "descripcion": "Ejemplo 11: recordatorio tras cuatro horas.",
+    "enabled": true,
+    "disparador": {
+      "id": "00000000-0000-4000-8000-000000000103",
+      "nombre": "Ticket sin respuesta",
+      "type": "TICKET_SIN_RESPUESTA"
+    },
+    "condicion": {
+      "declaracion": "all",
+      "condiciones": [
+        {
+          "campo": "horas_sin_respuesta",
+          "operador": "mayor que",
+          "keyword": "4"
+        }
+      ]
+    },
+    "acciones": [
+      {
+        "tipo": "sms",
+        "telefono": "+525500000000",
+        "mensaje": "Aviso de prueba: Recordatorio tras cuatro horas."
+      }
+    ]
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000012",
+    "nombre": "Escalar tickets de prioridad alta",
+    "descripcion": "Ejemplo 12: escalar tickets de prioridad alta.",
+    "enabled": false,
+    "disparador": {
+      "id": "00000000-0000-4000-8000-000000000103",
+      "nombre": "Ticket sin respuesta",
+      "type": "TICKET_SIN_RESPUESTA"
+    },
+    "condicion": {
+      "declaracion": "all",
+      "condiciones": [
+        {
+          "campo": "prioridad",
+          "operador": "es igual a",
+          "keyword": "alta"
+        }
+      ]
+    },
+    "acciones": [
+      {
+        "tipo": "webhook",
+        "url": "https://example.com/webhooks/regla-12",
+        "metodo": "PUT"
+      }
+    ]
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000013",
+    "nombre": "Seguimiento de tickets recientes",
+    "descripcion": "Ejemplo 13: seguimiento de tickets recientes.",
+    "enabled": true,
+    "disparador": {
+      "id": "00000000-0000-4000-8000-000000000103",
+      "nombre": "Ticket sin respuesta",
+      "type": "TICKET_SIN_RESPUESTA"
+    },
+    "condicion": {
+      "declaracion": "all",
+      "condiciones": [
+        {
+          "campo": "horas_sin_respuesta",
+          "operador": "menor que",
+          "keyword": "3"
+        }
+      ]
+    },
+    "acciones": [
+      {
+        "tipo": "email",
+        "destinatario": "notificaciones@example.com",
+        "asunto": "Seguimiento de tickets recientes",
+        "cuerpo": "Notificación de prueba: Seguimiento de tickets recientes. Revisa los detalles en la plataforma."
+      }
+    ]
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000014",
+    "nombre": "Alerta de prioridad crítica",
+    "descripcion": "Ejemplo 14: alerta de prioridad crítica.",
+    "enabled": true,
+    "disparador": {
+      "id": "00000000-0000-4000-8000-000000000103",
+      "nombre": "Ticket sin respuesta",
+      "type": "TICKET_SIN_RESPUESTA"
+    },
+    "condicion": {
+      "declaracion": "all",
+      "condiciones": [
+        {
+          "campo": "prioridad",
+          "operador": "contiene",
+          "keyword": "crítica"
+        },
+        {
+          "campo": "horas_sin_respuesta",
+          "operador": "mayor que",
+          "keyword": "4"
+        }
+      ]
+    },
+    "acciones": [
+      {
+        "tipo": "email",
+        "destinatario": "notificaciones@example.com",
+        "asunto": "Alerta de prioridad crítica",
+        "cuerpo": "Notificación de prueba: Alerta de prioridad crítica. Revisa los detalles en la plataforma."
+      },
+      {
+        "tipo": "webhook",
+        "url": "https://example.com/webhooks/regla-14",
+        "metodo": "PUT"
+      }
+    ]
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000015",
+    "nombre": "Revisión de tickets vencidos",
+    "descripcion": "Ejemplo 15: revisión de tickets vencidos.",
+    "enabled": false,
+    "disparador": {
+      "id": "00000000-0000-4000-8000-000000000103",
+      "nombre": "Ticket sin respuesta",
+      "type": "TICKET_SIN_RESPUESTA"
+    },
+    "condicion": {
+      "declaracion": "any",
+      "condiciones": [
+        {
+          "campo": "horas_sin_respuesta",
+          "operador": "mayor que",
+          "keyword": "24"
+        },
+        {
+          "campo": "prioridad",
+          "operador": "es igual a",
+          "keyword": "alta"
+        }
+      ]
+    },
+    "acciones": [
+      {
+        "tipo": "email",
+        "destinatario": "notificaciones@example.com",
+        "asunto": "Revisión de tickets vencidos",
+        "cuerpo": "Notificación de prueba: Revisión de tickets vencidos. Revisa los detalles en la plataforma."
+      },
+      {
+        "tipo": "sms",
+        "telefono": "+525500000000",
+        "mensaje": "Aviso de prueba: Revisión de tickets vencidos."
+      },
+      {
+        "tipo": "webhook",
+        "url": "https://example.com/webhooks/regla-15",
+        "metodo": "POST"
+      }
+    ]
+  }
 ]

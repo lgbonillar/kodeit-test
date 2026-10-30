@@ -5,7 +5,6 @@ import { Component, inject, OnInit, signal } from "@angular/core";
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
-import { DisparadorService } from "../services/disparador.service";
 import { Rule } from "../models/rule";
 import { DataViewModule } from 'primeng/dataview';
 import { TooltipModule } from 'primeng/tooltip';
@@ -111,7 +110,7 @@ import { DisparadorComponent } from "./disparador.component";
           [style]="{ width: '50rem' }"
       >
         @if (visible) {
-          <app-disparador [regla]="disparadorService.reglaSeleccionada" />
+          <app-disparador [regla]="reglaSeleccionada" />
         }
       </p-dialog>
     `,
@@ -125,10 +124,11 @@ export class RulesComponent implements OnInit {
   visible = false;
   modoEdicion = false;
 
-  disparadorService = inject(DisparadorService)
+  reglaSeleccionada: Rule | null = null
+
 
   showDialog() {
-    this.disparadorService.reglaSeleccionada = null;
+    this.reglaSeleccionada = null;
     this.visible = true;
     this.modoEdicion = false;
   }
@@ -149,7 +149,7 @@ export class RulesComponent implements OnInit {
   }
 
   editarRegla(regla: Rule) {
-    this.disparadorService.reglaSeleccionada = structuredClone(regla)
+    this.reglaSeleccionada = structuredClone(regla)
     this.modoEdicion = true;
     this.visible = true;
   }
