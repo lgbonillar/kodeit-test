@@ -51,10 +51,10 @@ import { Accion } from '../../../../models/accion'
             </p-tablist>
             <p-tabpanels>
               <p-tabpanel value="0">
-                <app-condition [trigger]="triggerSelected" (conditionsChanged)="conditionsChanged($event)" />
+                <app-condition [trigger]="triggerSelected" [condicion]="condiciones" (conditionsChanged)="conditionsChanged($event)" />
               </p-tabpanel>
               <p-tabpanel value="1">
-                <app-actions (actionsChanged)="actionsChanged($event)" />
+                <app-actions [actions]="acciones" (actionsChanged)="actionsChanged($event)" />
               </p-tabpanel>
             </p-tabpanels>
           </p-tabs>
@@ -84,11 +84,16 @@ export class RuleFormComponent implements OnInit {
   acciones: Accion[] | null = null
 
   ngOnInit(): void {
-    this.nombreRegla = ''
-    this.descripcionRegla = ''
-    this.triggerSelected = null
-    this.condiciones = null
-    this.acciones = null
+    if (!this.ruleSelected) return
+    if (!this.ruleSelected.disparador) return
+    if (!this.ruleSelected.condicion) return
+    if (!this.ruleSelected.acciones) return
+
+    this.nombreRegla = this.ruleSelected.nombre
+    this.descripcionRegla = this.ruleSelected.descripcion
+    this.triggerSelected = this.ruleSelected.disparador.type
+    this.condiciones = this.ruleSelected.condicion
+    this.acciones = this.ruleSelected.acciones
   }
 
   guardarRegla() {

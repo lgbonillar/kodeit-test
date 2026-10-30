@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core'
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
 import { FormsModule } from '@angular/forms'
 import { ButtonModule } from 'primeng/button'
 import { IftaLabelModule } from 'primeng/iftalabel'
@@ -225,8 +225,9 @@ import { ChipModule } from 'primeng/chip'
   `,
   imports: [ ChipModule, IftaLabelModule, TextareaModule, InputTextModule, ButtonModule, FormsModule, SelectModule, AccordionModule ]
 })
-export class ActionsComponent {
+export class ActionsComponent implements OnInit {
 
+  @Input() actions: Accion[] | null = null
   @Output() actionsChanged = new EventEmitter<Accion[]>()
 
   destinatario = ''
@@ -243,6 +244,14 @@ export class ActionsComponent {
   emails: EmailAction[] = []
   sms: SmsAction[] = []
   webhooks: WebhookAction[] = []
+
+  ngOnInit(): void {
+    if (!this.actions) return
+
+    this.emails = this.actions.filter(item => item.tipo === 'email')
+    this.sms = this.actions.filter(item => item.tipo === 'sms')
+    this.webhooks = this.actions.filter(item => item.tipo === 'webhook')
+  }
 
   insertMail () {
     this.emails = [...this.emails, {

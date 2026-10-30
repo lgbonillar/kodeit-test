@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core'
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core'
 import { FormsModule } from '@angular/forms'
 import { ButtonModule } from 'primeng/button'
 import { IftaLabelModule } from 'primeng/iftalabel'
@@ -69,9 +69,10 @@ import { ChipModule } from 'primeng/chip'
   `,
   imports: [ ButtonModule, ChipModule, RadioButtonModule, IftaLabelModule, SelectModule, InputTextModule, FormsModule, TooltipModule ]
 })
-export class ConditionComponent implements OnChanges {
+export class ConditionComponent implements OnInit, OnChanges {
 
   @Input() trigger: DISPARADOR | null = null
+  @Input() condicion: Condiciones | null = null
   @Output() conditionsChanged = new EventEmitter<Condiciones>()
 
   statement: 'all' | 'any' = 'all'
@@ -111,6 +112,14 @@ export class ConditionComponent implements OnChanges {
     return this.trigger
         ? this.camposPorDisparador[this.trigger]
         : []
+  }
+
+  ngOnInit() {
+    if (!this.condicion) return
+
+    this.condiciones = this.condicion.condiciones
+    this.statement = this.condicion.declaracion
+
   }
 
   resetForm(campo: CampoDisponible | null = null): void {

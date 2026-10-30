@@ -36,12 +36,13 @@ export default class ListRulesComponent implements OnInit {
     this.initRules()
   }
 
-  showDialog(): void {
-    return
-  }
+  abrirFormulario(regla: Rule | null = null) {
+    if (regla) {
+      this.ruleSelected = structuredClone(regla)
+    } else {
+      this.ruleSelected = null
+    }
 
-  abrirFormulario(regla: Rule) {
-    this.ruleSelected = structuredClone(regla)
     this.visible = true;
   }
 

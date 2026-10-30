@@ -5,7 +5,7 @@
         Listado de Reglas
       </h1>
       
-      <button pButton [raised]="true" pTooltip="Nueva regla" (click)="showDialog()" class="shrink-0">
+      <button pButton [raised]="true" pTooltip="Nueva regla" (click)="abrirFormulario()" class="shrink-0">
         <i class="pi pi-file-plus"></i>
       </button>
     </div>
@@ -32,7 +32,7 @@
             <div class="flex flex-col flex-1">
               <span class="font-bold text-smo">{{ rule.nombre }}</span>
               <div>
-                <p-tag [value]="rule.disparador.nombre" />
+                <p-tag [value]="rule.disparador.nombre" severity="secondary" />
               </div>
             </div>
           </label>
@@ -69,7 +69,7 @@
         <span class="font-bold">No hay reglas establecidas.</span>
         <div>
           <span>Crear nueva regla </span>
-          <button pButton [raised]="true" pTooltip="Nueva regla" (click)="showDialog()" class="shrink-0">
+          <button pButton [raised]="true" pTooltip="Nueva regla" (click)="abrirFormulario()" class="shrink-0">
             <i class="pi pi-file-plus"></i>
           </button>
         </div>
@@ -116,6 +116,6 @@
   [(visible)]="visible"
 >
   @if (visible) {
-  <app-rule-form />
+  <app-rule-form [ruleSelected]="ruleSelected" />
   }
 </p-dialog>
