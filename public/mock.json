@@ -1,6 +1,6 @@
 [
     {
-        "id": "b8918d9b-1453-4e06-bb8d-b260858abcc5",
+        "id": "a8918d9b-1453-4e06-bb8d-b260858abcc5",
         "nombre": "Enviar Correo electrónico",
         "descripcion": "Se manda un correo electrónico con algunas reglas",
         "enabled": true,
@@ -41,7 +41,7 @@
         }
     },
     {
-        "id": "b8918d9b-1453-4e06-bb8d-b260858abcc7",
+        "id": "c8918d9b-1453-4e06-bb8d-b260858abcc7",
         "nombre": "Enviar correo y un SMS",
         "descripcion": "Se mandan varias cosas",
         "enabled": false,

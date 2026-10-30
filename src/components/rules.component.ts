@@ -1,102 +1,147 @@
 import { CommonModule } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
-import { Component, inject, OnInit } from "@angular/core";
+import { Component, inject, OnInit, signal } from "@angular/core";
 
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
-import { Disparador } from "../models/disparador";
-import { DisparadorComponent } from "./disparador.component";
 import { DisparadorService } from "../services/disparador.service";
 import { Rule } from "../models/rule";
+import { DataViewModule } from 'primeng/dataview';
+import { TooltipModule } from 'primeng/tooltip';
+import { CheckboxModule } from 'primeng/checkbox';
+import { FormsModule } from "@angular/forms";
+import { TagModule } from 'primeng/tag';
+import { DisparadorComponent } from "./disparador.component";
+
 
 @Component({
     selector: "app-rules",
     styles: `
-        .informacion {
-            align-items: center;
-            display: flex;
-            gap: 1rem;
-            justify-content: space-between;
-        }
+      .rules-cabecera {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
 
-        .tarjeta {
-            margin-bottom: 1rem;
-        }
+        border-bottom: 1px solid #ececec;
+      }
 
-        .header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
+      .list-container {
+        max-width: 1200px;
+        display: flex;
+        justify-content: center;
+        padding: 2rem 0;
+      }
+
+      .list-rule-information {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+      }
+
+      .list-rule-information--text {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .list-rule-information--text > h3 {
+        margin: 0;
+      }
+
+      .list-element {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 800px;
+        border: 1px solid #ececec;
+        padding: 1rem;
+      }
+
+      .list-element:hover {
+        border-color: #e1e1e1;
+      }
+
+      .full-w {
+        width: 100%;
+      }
     `,
     template: `
-        <section>
 
-        <header class="header">
-            <h1>Reglas de la aplicación</h1>
+      <header class="rules-cabecera">
+        <h1>
+          Listado de Reglas
+        </h1>
 
-            <p-button label="Check" />
+        <p-button icon="pi pi-file-plus" [raised]="true" pTooltip="Nueva regla" (click)="showDialog()" />
+      </header>
 
+      <div class="list-container">
+        <p-dataview #dv [value]="rules()" styleClass="full-w">
+          <ng-template #list let-items>
+            @for (item of items; track item.id) {
+            <div class="list-element">
+              <div class="list-rule-information">  
+                <p-checkbox [inputId]="'enabled' + item.id" [binary]="true" [ngModel]="item.enabled" (ngModelChange)="cambiarEstado(item.id, $event)" [pTooltip]="item.enabled ? 'Clic para deshabilitar regla' : 'Clic para habilitar regla'" />
+                
+                <div class="list-rule-information--text">
+                  <h3>{{ item.nombre }}</h3>
+                  <span>{{ item.descripcion }}</span>
+                  @if (item.disparador) {
+                    <span><small>Disparador: </small><p-tag [value]="item.disparador.nombre" /></span>
+                  }
 
-            <button pButton>
-                <i class="pi pi-check" pButtonIcon></i>
-                <span pButtonLabel>Crear nuevo</span>
-            </button>
-        </header>
+                </div>
+              </div>
 
-
-
-            @for (regla of reglas; track regla.id) {
-                <p-card [header]="regla.nombre" class="tarjeta">
-                    <div class="informacion">
-                        <p class="m-0">
-                            {{ regla.descripcion }}
-                        </p>
-                        <div class="card flex justify-center">
-                            <button pButton (click)="editarRegla(regla)">
-                                <i class="pi pi-check" pButtonIcon></i>
-                                <span pButtonLabel>Editar</span>
-                            </button>
-                        </div>
-                    </div>
-                </p-card>
+              <div>
+                <p-button icon="pi pi-times" [rounded]="true" severity="danger" [outlined]="true" pTooltip="Eliminar regla" />
+              </div>
+            </div>
             }
-        </section>
+          </ng-template>
+        </p-dataview>
+      </div>
 
-
-        <p-dialog header="Edit Profile" [modal]="true" [(visible)]="visible" [style]="{ width: '80%', height: '20rem' }">
-            <app-disparador />
-        </p-dialog>
+      <p-dialog [header]="modoEdicion ? 'Edición de Regla' : 'Creando nueva regla'" [modal]="true" [(visible)]="visible" [style]="{ width: '25rem' }">
+        <app-disparador />
+      </p-dialog>
     `,
-    imports: [ ButtonModule, CommonModule, CardModule, DialogModule, DisparadorComponent  ]
+    imports: [ButtonModule, DataViewModule, CheckboxModule, CommonModule, CardModule, DialogModule, FormsModule, TagModule, TooltipModule, DisparadorComponent]
 })
 export class RulesComponent implements OnInit {
 
-    reglas: Rule[] = []
-    visible = true;
+  rules = signal<Rule[]>([])
 
-    disparadorService = inject(DisparadorService)
+  reglas: Rule[] = []
+  visible = false;
+  modoEdicion = false;
 
-    showDialog() {
-        this.visible = true;
-    }
+  disparadorService = inject(DisparadorService)
 
-    private readonly http = inject(HttpClient)
+  showDialog() {
+    this.visible = true;
+  }
 
-    ngOnInit (): void {
-        this.http.get('/res.json').subscribe((response: any) => {
-            console.log("response: ", response)
+  private readonly http = inject(HttpClient)
 
-            this.reglas = response
-            console.log(this.reglas)
-        })
-    }
+  ngOnInit (): void {
+    this.http.get<Rule[]>('/mock.json').subscribe((response: Rule[]) => {
+      this.rules.set(response)
 
-    editarRegla(regla: Rule) {
-        this.disparadorService.reglaSeleccionada = regla
-        console.log('Regla seleccionada', this.disparadorService.reglaSeleccionada)
-        this.visible = true;
-    }
+      this.reglas = response
+    })
+  }
+
+  cambiarEstado (id: string, enabled: boolean): void {
+    const listaActualizada = this.rules().map(regla => regla.id === id ? { ...regla, enabled } : regla)
+    this.rules.set(listaActualizada)
+  }
+
+  editarRegla(regla: Rule) {
+    this.disparadorService.reglaSeleccionada = regla
+    console.log('Regla seleccionada', this.disparadorService.reglaSeleccionada)
+    this.visible = true;
+  }
 
 }
