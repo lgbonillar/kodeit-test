@@ -9,17 +9,21 @@ import { Rule } from '../../../../../models/rule'
 import { CheckboxModule } from 'primeng/checkbox'
 import { FormsModule } from '@angular/forms'
 import { TagModule } from 'primeng/tag'
+import { ConfirmPopupModule } from 'primeng/confirmpopup'
+import { ConfirmationService } from 'primeng/api'
 
 @Component({
   selector: 'app-list-rules',
   templateUrl: './list-rules.component.html',
-  imports: [ ButtonModule, CheckboxModule, DataViewModule, FormsModule, TagModule, TooltipModule ]
+  imports: [ ButtonModule, CheckboxModule, ConfirmPopupModule, DataViewModule, FormsModule, TagModule, TooltipModule ],
+  providers: [ ConfirmationService ]
 })
 export default class ListRulesComponent implements OnInit {
 
   loadingRules = signal<boolean>(false)
   rules = signal<Rule[]>([])
 
+  private readonly confirmationService = inject(ConfirmationService);
   private readonly rulesService = inject(RulesService)
   private readonly destroyRef = inject(DestroyRef)
 
@@ -36,9 +40,16 @@ export default class ListRulesComponent implements OnInit {
     this.rules.set(listaActualizada)
   }
 
-  eliminarRegla (index: number): void {
+  confirmarEliminacion (event: MouseEvent, rule: Rule): void {
+    this.confirmationService.confirm({
+      target: event.currentTarget as HTMLElement,
+      accept: () => this.eliminarRegla(rule)
+    })
+  }
+
+  eliminarRegla (item: Rule): void {
     this.rules.set(this.rules().filter(
-        (_, posicion) => posicion !== index
+      rule => rule.id !== item.id
     ))
   }
 

@@ -41,7 +41,15 @@
               <button pButton [rounded]="true" severity="secondary" [outlined]="true" pTooltip="Editar regla">
                 <i class="pi pi-file-edit"></i>
               </button>
-              <button pButton [rounded]="true" severity="danger" [outlined]="true" pTooltip="Eliminar regla" (click)="eliminarRegla(i)">
+              <button
+                  pButton [rounded]="true"
+                  type="button"
+                  severity="danger"
+                  pTooltip="Eliminar regla"
+                  aria-label="Eliminar regla"
+                  [outlined]="true"
+                  (click)="confirmarEliminacion($event, rule)"
+              >
                 <i class="pi pi-times"></i>
               </button>
             </div>
@@ -63,3 +71,31 @@
   </p-dataview>
 
 </section>
+
+<p-confirmpopup #deletePopup appendTo="body">
+  <ng-template #headless let-confirmation>
+      <div class="rounded p-2 flex flex-col gap-2">
+          <span class="text-sm">Mensaje de confirmación</span>
+          <div class="flex items-center justify-end gap-2">
+            <button
+              pButton
+              type="button"
+              severity="secondary"
+              [outlined]="true"
+              (click)="deletePopup.onReject()"
+            >
+              Cancelar
+            </button>
+
+            <button
+              pButton
+              type="button"
+              severity="danger"
+              (click)="deletePopup.onAccept()"
+            >
+              Eliminar
+            </button>
+          </div>
+      </div>
+  </ng-template>
+</p-confirmpopup>
