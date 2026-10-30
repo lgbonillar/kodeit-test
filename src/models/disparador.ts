@@ -1,14 +1,13 @@
-export type DISPARADOR = "CLIENTE_CREADO" | "PAGO_RECIBIDO" | "TICKET_SIN_RESPUESTA"
+export type DISPARADOR = 'CLIENTE_CREADO' | 'PAGO_RECIBIDO' | 'TICKET_SIN_RESPUESTA'
+export type CLIENTE_CREADO_CAMPOS = 'PAIS' | 'PLAN'
+export type OPERADORES_TEXTO = 'ES_IGUAL_A' | 'CONTIENE'
 
 export interface Condicion {
-    id: string
     campo: string
     operador: string
 }
 
 export interface Disparador {
     id: string
-    type: DISPARADOR
     nombre: string
-    condiciones: Condicion[]
 }

@@ -103,7 +103,7 @@ import { DisparadorComponent } from "./disparador.component";
         </p-dataview>
       </div>
 
-      <p-dialog [header]="modoEdicion ? 'Edición de Regla' : 'Creando nueva regla'" [modal]="true" [(visible)]="visible" [style]="{ width: '25rem' }">
+      <p-dialog [header]="modoEdicion ? 'Edición de Regla' : 'Creando nueva regla'" [modal]="true" [(visible)]="visible" [style]="{ width: '50rem' }">
         <app-disparador />
       </p-dialog>
     `,

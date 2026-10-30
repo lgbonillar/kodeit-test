@@ -7,13 +7,7 @@ import { Rule } from "../models/rule";
 export class DisparadorService {
     reglaSeleccionada!: Rule
 
-    tipoDeDisparador (): number {
-        if (this.reglaSeleccionada.disparador?.type === 'CLIENTE_CREADO')
-            return 0
-        else if (this.reglaSeleccionada.disparador?.type === 'PAGO_RECIBIDO')
-            return 1
-        else if (this.reglaSeleccionada.disparador?.type === 'TICKET_SIN_RESPUESTA')
-            return 2
-        else return 0
+    tipoDeDisparador (): void {
+
     }
 }

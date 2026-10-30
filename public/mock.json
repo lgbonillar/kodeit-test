@@ -6,16 +6,15 @@
         "enabled": true,
         "disparador": {
             "id": "b8918d9b-1453-4e06-bb8d-b260858abcb1",
-            "nombre": "Paso 1: Cliente creado",
-            "type": "CLIENTE_CREADO",
-            "condiciones": [
-                {
-                    "id": "b8918d9b-1453-4e06-bb8d-b260858abcc1",
-                    "campo": "pais",
-                    "operador": "es_igual_a"
-                }
-            ]
-        }
+            "nombre": "Paso 1: Cliente creado"
+        },
+        "condiciones": [
+            {
+                "id": "b8918d9b-1453-4e06-bb8d-b260858abcc1",
+                "campo": "pais",
+                "operador": "es_igual_a"
+            }
+        ]
     },
     {
         "id": "b8918d9b-1453-4e06-bb8d-b260858abcc6",
@@ -24,21 +23,20 @@
         "enabled": true,
         "disparador": {
             "id": "b8918d9b-1453-4e06-bb8d-b260858abcb1",
-            "type": "PAGO_RECIBIDO",
-            "nombre": "Paso 2: Pago Recibido",
-            "condiciones": [
-                {
-                    "id": "b8918d9b-1453-4e06-bb8d-b260858abcc3",
-                    "campo": "pais",
-                    "operador": "es_igual_a"
-                },
-                {
-                    "id": "b8918d9b-1453-4e06-bb8d-b260858abcc4",
-                    "campo": "plan",
-                    "operador": "contiene"
-                }
-            ]
-        }
+            "nombre": "Paso 2: Pago Recibido"
+        },
+        "condiciones": [
+            {
+                "id": "b8918d9b-1453-4e06-bb8d-b260858abcc3",
+                "campo": "pais",
+                "operador": "es_igual_a"
+            },
+            {
+                "id": "b8918d9b-1453-4e06-bb8d-b260858abcc4",
+                "campo": "plan",
+                "operador": "contiene"
+            }
+        ]
     },
     {
         "id": "c8918d9b-1453-4e06-bb8d-b260858abcc7",

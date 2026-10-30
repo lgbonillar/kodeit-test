@@ -8,8 +8,8 @@ import { DisparadorService } from "../services/disparador.service";
     selector: 'app-condicion',
     template: `
             <div>
-                <p-select [options]="campo" [(ngModel)]="campoSeleccionado" placeholder="Seleccione el campo" />
-                <p-select [options]="operador" [(ngModel)]="operadorSeleccionada" placeholder="Operador" />
+                <p-select [options]="campo" [(ngModel)]="campoSeleccionado" placeholder="Seleccione el campo" appendTo="body" />
+                <p-select [options]="operador" [(ngModel)]="operadorSeleccionada" placeholder="Operador" appendTo="body" />
             </div>
             
             <p-button icon="pi pi-times" [rounded]="true" [text]="true" severity="danger" (click)="eliminar()" />
@@ -23,8 +23,8 @@ export class CondicionComponent {
     @Input() operadorSeleccionada!: string
     @Output() eliminarCondicion = new EventEmitter(false)
 
-    campo = [ 'Seleccionar', 'País', 'Plan' ]
-    operador = [ 'Seleccionar', 'es igual a', 'contiene' ]
+    campo = ['País', 'Plan' ]
+    operador = ['es igual a', 'contiene' ]
 
     eliminar() {
         this.eliminarCondicion.emit(true)

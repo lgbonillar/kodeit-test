@@ -1,90 +1,98 @@
-import { Component, inject, Input, OnInit } from '@angular/core';
-import { Condicion, Disparador } from '../models/disparador';
+import { Component, inject } from '@angular/core';
+import { Condicion, DISPARADOR } from '../models/disparador';
 import { TabsModule } from 'primeng/tabs';
 import { FormsModule } from '@angular/forms';
-import { FloatLabelModule } from 'primeng/floatlabel';
 import { SelectModule } from 'primeng/select';
 import { ButtonModule } from 'primeng/button';
 import { CondicionComponent } from './condicion.component';
 import { DisparadorService } from '../services/disparador.service';
+import { IftaLabelModule } from 'primeng/iftalabel';
+import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
     selector: 'app-disparador',
     styles: `
-        .condiciones {
+        .regla-card {
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .campo-disparador {
+            display: block;
+            width: 20rem;
+            max-width: 100%;
+        }
+
+        .campo-nombre, .campo-descripcion {
+            display: block;
+            width: 20rem;
+            max-width: 100%;
         }
     `,
     template: `
-        <div class="card">
-            <p-tabs [(value)]="tabNumber">
-                <p-tablist>
-                    <p-tab value="0">Cliente creado</p-tab>
-                    <p-tab value="1">Pago Recibido</p-tab>
-                    <p-tab value="2">Ticket sin respuesta</p-tab>
-                </p-tablist>
-                <p-tabpanels>
-                    <p-tabpanel value="0">
-                        <p-button label="Agregar condición" (onClick)="agregarCondicionNueva()" />
+        <div class="regla-card">
+            <div>
+                <p-iftalabel class="campo-nombre">
+                    <input pInputText id="rule-name" [(ngModel)]="nombreRegla" autocomplete="off" style="width: 100%;" />
+                    <label for="username">Nombre</label>
+                </p-iftalabel>
+            </div>
 
-                        <div class="condiciones">
+            <div>
+                <p-iftalabel class="campo-descripcion">
+                    <input pInputText id="rule-name" [(ngModel)]="descripcionRegla" autocomplete="off" style="width: 100%;" />
+                    <label for="username">Descripción</label>
+                </p-iftalabel>
+            </div>
 
-                        @if (this.disparadorService.reglaSeleccionada && this.disparadorService.reglaSeleccionada.disparador) {
-                            @for (condicion of this.disparadorService.reglaSeleccionada.disparador.condiciones; track condicion.id) {
-                                <app-condicion [campoSeleccionado]="condicion.campo" [operadorSeleccionada]="condicion.operador" (eliminar)="eliminarCondicion($event, condicion)" />
-                            }
-                        }
-                            
+            <div>
+                <p-iftalabel class="campo-disparador">
+                    <p-select [(ngModel)]="triggerSelected" inputId="input-disparador" [options]="triggers" [fluid]="true" appendTo="body" />
+                    <label for="dd-city">Disparador</label>
+                </p-iftalabel>
+    
+                <span><small>Selecciona el evento que desencadena esta regla</small></span>
+            </div>
 
-                        </div>
+            <div>
+                @if (triggerSelected) {
 
-                    </p-tabpanel>
-                    <p-tabpanel value="1">
-                        <p class="m-0">
-                            PAGO RECIBIDO
-                        </p>
-                    </p-tabpanel>
-                    <p-tabpanel value="2">
-                        <p class="m-0">
-                            TICKET_RECIBIDO
-                        </p>
-                    </p-tabpanel>
-                </p-tabpanels>
-            </p-tabs>
+                <p-tabs value="0">
+                    <p-tablist>
+                        <p-tab value="0">Condición</p-tab>
+                        <p-tab value="1">Acciones</p-tab>
+                    </p-tablist>
+                    <p-tabpanels>
+                        <p-tabpanel value="0">
+                            <app-condicion />
+                            <span>tab 1</span>
+                        </p-tabpanel>
+                        <p-tabpanel value="1">
+                            <span>tab 2</span>
+                        </p-tabpanel>
+                    </p-tabpanels>
+                </p-tabs>
+                }
+            </div>
         </div>
     `,
-    imports: [ ButtonModule, TabsModule, CondicionComponent, FormsModule, SelectModule  ]
+    imports: [ ButtonModule, TabsModule, CondicionComponent, FormsModule, SelectModule, SelectModule, InputTextModule, IftaLabelModule, FormsModule ]
 })
-export class DisparadorComponent implements OnInit {
-    tabNumber: number = 0
-    pais: string = ''
-    plan: string = ''
+export class DisparadorComponent {
+
+    triggers = ['CLIENTE_CREADO', 'PAGO_RECIBIDO', 'TICKET_SIN_RESPUESTA']
+    triggerSelected!: DISPARADOR
+
+    nombreRegla = ''
+    descripcionRegla = ''
+
+    condicionEdicion: Condicion[] = [
+
+    ]
 
     condiciones: Condicion[] = []
 
     disparadorService = inject(DisparadorService)
-
-    ngOnInit(): void {
-
-    }
-
-    agregarCondicionNueva () {
-        if (this.disparadorService.reglaSeleccionada.disparador!.condiciones.some(condicion => condicion.id === 'not-defined')) {
-            return
-        }
-
-        this.disparadorService.reglaSeleccionada.disparador!.condiciones.push({
-            id: 'not-defined',
-            campo: 'Seleccionar',
-            operador: 'Seleccionar'
-        })
-    }
-
-    eliminarCondicion(eliminar: any, condicion: Condicion) {
-        this.disparadorService.reglaSeleccionada.disparador!.condiciones.pop()
-    }
 
 }
