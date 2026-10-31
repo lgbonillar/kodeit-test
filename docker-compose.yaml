@@ -1,0 +1,34 @@
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "127.0.0.1:3000:3000"
+    environment:
+      PORT: "3000"
+      DATABASE_URL: postgresql://reglas:reglas_dev@db:5432/reglas
+      FRONTEND_ORIGIN: http://localhost:4200
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: reglas
+      POSTGRES_USER: reglas
+      POSTGRES_PASSWORD: reglas_dev
+    ports:
+      - "127.0.0.1:5432:5432"
+
+    tmpfs:
+      - /var/lib/postgresql/data
+
+    volumes:
+      - ./database/init:/docker-entrypoint-initdb.d:ro
+      - ./public/mock.json:/seed/mock.json:ro
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U reglas -d reglas"]
+      interval: 5s
+      timeout: 5s
+      retries: 10

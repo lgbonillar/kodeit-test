@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core'
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core'
 import { FormsModule } from '@angular/forms'
 import { ButtonModule } from 'primeng/button'
 import { IftaLabelModule } from 'primeng/iftalabel'
@@ -17,11 +17,11 @@ import { ChipModule } from 'primeng/chip'
         <span class="text-sm min-w-25">Declaración</span>
         <aside class="flex flex-col gap-4">
           <div class="flex gap-2 items-center">
-            <p-radiobutton name="statement" value="all" [(ngModel)]="statement" inputId="statement-all" />
+            <p-radiobutton name="statement" value="all" [ngModel]="statement" (ngModelChange)="cambiarDeclaracion($event)" inputId="statement-all" />
             <label for="statement-all" class="text-sm">TODOS (Filtrar si se cumplen TODAS las siguientes condiciones)</label>
           </div>
           <div class="flex gap-2 items-center">
-            <p-radiobutton name="statement" value="any" [(ngModel)]="statement" inputId="statement-any" />
+            <p-radiobutton name="statement" value="any" [ngModel]="statement" (ngModelChange)="cambiarDeclaracion($event)" inputId="statement-any" />
             <label for="statement-any" class="text-sm">CUALQUIERA (Filtrar si se cumple ALGUNA de las siguientes condiciones)</label>
           </div>
         </aside>
@@ -69,7 +69,7 @@ import { ChipModule } from 'primeng/chip'
   `,
   imports: [ ButtonModule, ChipModule, RadioButtonModule, IftaLabelModule, SelectModule, InputTextModule, FormsModule, TooltipModule ]
 })
-export class ConditionComponent implements OnInit, OnChanges {
+export class ConditionComponent implements OnChanges {
 
   @Input() trigger: DISPARADOR | null = null
   @Input() condicion: Condiciones | null = null
@@ -114,12 +114,9 @@ export class ConditionComponent implements OnInit, OnChanges {
         : []
   }
 
-  ngOnInit() {
-    if (!this.condicion) return
-
-    this.condiciones = this.condicion.condiciones
-    this.statement = this.condicion.declaracion
-
+  cambiarDeclaracion(declaracion: 'all' | 'any'): void {
+    this.statement = declaracion
+    this.conditionsChanged.emit({ declaracion, condiciones: this.condiciones })
   }
 
   resetForm(campo: CampoDisponible | null = null): void {
@@ -157,10 +154,16 @@ export class ConditionComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['trigger']) {
+    if (changes['trigger'] && !changes['trigger'].firstChange) {
       this.resetForm()
       this.condiciones = []
       this.conditionsChanged.emit({ declaracion: this.statement, condiciones: this.condiciones })
+      return
+    }
+
+    if (changes['condicion']) {
+      this.condiciones = structuredClone(this.condicion?.condiciones ?? [])
+      this.statement = this.condicion?.declaracion ?? 'all'
     }
   }
   

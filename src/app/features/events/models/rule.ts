@@ -1,5 +1,5 @@
-import { Condicion, Condiciones, DISPARADOR, Disparador } from "./disparador"
-import { Accion } from "./accion"
+import { Condicion, Condiciones, DISPARADOR, Disparador } from './disparador'
+import { Accion } from './accion'
 
 export interface Rule {
     id: string
@@ -12,15 +12,16 @@ export interface Rule {
 }
 
 export interface GuardarReglaRequest {
-  nombre: string;
-  descripcion: string;
-  enabled: boolean;
+  id?: string
+  nombre: string
+  descripcion: string
+  enabled: boolean
   disparador: {
-    type: DISPARADOR;
+    type: DISPARADOR
   };
   condicion: {
-    declaracion: 'all' | 'any';
-    condiciones: Condicion[];
+    declaracion: 'all' | 'any'
+    condiciones: Condicion[]
   };
-  acciones: Accion[];
+  acciones: Accion[]
 }

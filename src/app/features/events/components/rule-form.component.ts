@@ -1,4 +1,4 @@
-import { Component, inject, Input, OnInit } from '@angular/core'
+import { Component, DestroyRef, EventEmitter, inject, Input, OnInit, Output, signal } from '@angular/core'
 import { GuardarReglaRequest, Rule } from '../models/rule'
 import { IftaLabelModule } from 'primeng/iftalabel'
 import { SelectModule } from 'primeng/select'
@@ -12,6 +12,9 @@ import { ConditionComponent } from './condition.component'
 import { ActionsComponent } from './actions.component'
 import { Accion } from '../models/accion'
 import { MessageService } from 'primeng/api'
+import { RulesService } from '../service/rules.service'
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
+import { catchError, EMPTY, finalize } from 'rxjs'
 
 @Component({
   selector: 'app-rule-form',
@@ -62,7 +65,7 @@ import { MessageService } from 'primeng/api'
       }
 
       <footer class="flex justify-end">
-        <button pButton type="submit" [raised]="true" pTooltip="Guardar regla" (click)="guardarRegla()">
+        <button pButton type="submit" [raised]="true" pTooltip="Guardar regla" (click)="guardarRegla()" [disabled]="savingRule()">
           <i class="pi pi-file-plus"></i>
           <span>Guardar</span>
         </button>
@@ -74,6 +77,9 @@ import { MessageService } from 'primeng/api'
 export class RuleFormComponent implements OnInit {
 
   @Input() ruleSelected: Rule | null = null
+  @Output() saved = new EventEmitter<Rule>()
+
+  savingRule = signal(false)
 
   nombreRegla = ''
   descripcionRegla = ''
@@ -85,6 +91,8 @@ export class RuleFormComponent implements OnInit {
   acciones: Accion[] | null = null
 
   readonly messageService = inject(MessageService)
+  readonly rulesService = inject(RulesService)
+  private readonly destroyRef = inject(DestroyRef)
 
   ngOnInit(): void {
     if (!this.ruleSelected) return
@@ -100,6 +108,8 @@ export class RuleFormComponent implements OnInit {
   }
 
   guardarRegla() {
+    if (this.savingRule()) return
+
     if (
         !this.nombreRegla.trim() ||
         !this.triggerSelected ||
@@ -120,30 +130,51 @@ export class RuleFormComponent implements OnInit {
     }
 
     const payload: GuardarReglaRequest = {
-        nombre: this.nombreRegla.trim(),
-        descripcion: this.descripcionRegla.trim(),
-        enabled: this.ruleSelected?.enabled ?? true,
+      nombre: this.nombreRegla.trim(),
+      descripcion: this.descripcionRegla.trim(),
+      enabled: this.ruleSelected?.enabled ?? true,
 
-        disparador: {
-            type: this.triggerSelected
-        },
+      disparador: {
+          type: this.triggerSelected
+      },
 
-        condicion: {
-            declaracion: this.condiciones.declaracion,
-            condiciones: this.condiciones.condiciones.map(condicion => ({
-                campo: condicion.campo,
-                operador: condicion.operador,
-                keyword: condicion.keyword.trim()
-            }))
-        },
+      condicion: {
+          declaracion: this.condiciones.declaracion,
+          condiciones: this.condiciones.condiciones.map(condicion => ({
+              campo: condicion.campo,
+              operador: condicion.operador,
+              keyword: condicion.keyword.trim()
+          }))
+      },
 
-        acciones: structuredClone(this.acciones)
+      acciones: structuredClone(this.acciones)
     }
 
-    console.log('ID de regla:', this.ruleSelected?.id);
-    console.log('Payload:', payload);
+    const request$ = this.ruleSelected
+      ? this.rulesService.updateRule(this.ruleSelected.id, payload)
+      : this.rulesService.createRule(payload)
 
-    this.messageService.add({ severity: 'success', summary: 'Regla registrada' })
+    this.savingRule.set(true)
+
+    request$.pipe(
+      takeUntilDestroyed(this.destroyRef),
+      catchError(() => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'No se pudo guardar la regla',
+        })
+        return EMPTY
+      }),
+      finalize(() => this.savingRule.set(false)),
+    ).subscribe(rule => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Regla guardada',
+      })
+
+      this.saved.emit(rule)
+    })
+
   }
 
   triggerChanged(trigger: DISPARADOR) {

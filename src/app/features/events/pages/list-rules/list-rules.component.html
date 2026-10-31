@@ -23,6 +23,7 @@
             <p-checkbox
                 [inputId]="'enabled-' + rule.id"
                 [binary]="true"
+                [disabled]="updatingRules().has(rule.id)"
                 [ngModel]="rule.enabled"
                 [pTooltip]="rule.enabled ? 'Clic para deshabilitar regla' : 'Clic para habilitar regla'"
                 (ngModelChange)="cambiarEstadoRegla($event, rule.id)"
@@ -42,6 +43,7 @@
                 pButton
                 severity="secondary"
                 pTooltip="Editar regla"
+                [disabled]="updatingRules().has(rule.id)"
                 [rounded]="true"
                 [outlined]="true"
                 (click)="abrirFormulario(rule)"
@@ -53,6 +55,7 @@
                 type="button"
                 severity="danger"
                 pTooltip="Eliminar regla"
+                [disabled]="updatingRules().has(rule.id)"
                 aria-label="Eliminar regla"
                 [outlined]="true"
                 (click)="confirmarEliminacion($event, rule)"
@@ -116,6 +119,9 @@
   [(visible)]="visible"
 >
   @if (visible) {
-  <app-rule-form [ruleSelected]="ruleSelected" />
+  <app-rule-form
+      [ruleSelected]="ruleSelected"
+      (saved)="onRuleSaved()"
+  />
   }
 </p-dialog>
