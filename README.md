@@ -2,6 +2,8 @@
 
 Prueba técnica desarrollada con Angular y PrimeNG para configurar reglas con disparadores, condiciones y acciones.
 
+> **Nota:** Backend y base de datos generados con IA.
+
 ## Requisitos
 
 - Node.js y npm instalados, compatibles con Angular 22.
